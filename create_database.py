@@ -21,10 +21,11 @@ connection.commit()
 ## Create a "scans" table
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS scans (
-        badge_code TEXT UNIQUE NOT NULL,
+        badge_code TEXT NOT NULL,
         activity_name TEXT PRIMARY KEY UNIQUE NOT NULL,
         activity_category TEXT NOT NULL,
-        scanned_at TEXT NOT NULL)''')
+        scanned_at TEXT NOT NULL,
+        FOREIGN KEY (badge_code) REFERENCES hackers(badge_code) ON DELETE CASCADE)''')
 ## Commit the changes to the database
 connection.commit()
 

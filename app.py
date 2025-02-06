@@ -16,7 +16,6 @@ def get_hackers():
     ## Connection to the database
     connection = sqlite3.connect('participants.db')
     cursor = connection.cursor()
-    
 
     ## SQL query that retrieves all hackers
     cursor.execute('SELECT * FROM hackers')
@@ -103,15 +102,32 @@ def get_hacker(hacker_id):
     cursor.execute('SELECT * FROM hackers WHERE badge_code = ?', (hacker_id,))
     hacker = cursor.fetchone()
 
+    if not hacker:
+        cursor.close()
+        connection.close()
+        return jsonify({"error": "Hacker not found"}), 404
+
+    # Fetch all scans associated with the hacker
+    cursor.execute("SELECT activity_name, activity_category, scanned_at FROM scans WHERE badge_code = ?", (hacker_id,))
+    scans = cursor.fetchall()
+
+
     ## Close the cursor and connection for database
     cursor.close()
     connection.close()
 
-    ## Check if hacker exists
-    if hacker:
-        return jsonify(hacker)
-    else:
-        return jsonify({'message': 'Hacker could not be found'}), 404
+    # Format response data
+    hacker_data = {
+        "name": hacker[0],
+        "email": hacker[1],
+        "phone": hacker[2],
+        "badge_code": hacker[3],
+        "updated_at": hacker[4],
+        "scans": [{"activity_name": scan[0], "activity_category": scan[1], "scanned_at": scan[2]} for scan in scans]
+    }
+
+    return jsonify(hacker_data)
+    
     
 
 ## Endpoint that updates an existing hacker's information
@@ -183,8 +199,8 @@ def update_hacker(hacker_id):
 @app.route('/scan/<string:hacker_id>', methods=['PUT'])
 def add_scan(hacker_id):
     data = request.get_json()
-    name = data.get("name")
-    cat = data.get("cat")
+    name = data.get("activity_name")
+    cat = data.get("activity_category")
 
     if not name or not cat:
         return jsonify({"error":"no name or category was given for the activity"}), 400
@@ -207,7 +223,8 @@ def add_scan(hacker_id):
     timestamp = get_exact_time()
 
     ## Insert scan into scans table
-    cursor.execute('''INSERT INTO scans (badge_code, name, cat, scanned_at) VALUES (?, ?, ?, ?)''', (hacker_id, name, cat, timestamp))
+    cursor.execute('''INSERT INTO scans (badge_code, activity_name, activity_category, scanned_at) VALUES (?, ?, ?, ?)''',
+                     (hacker_id, name, cat, timestamp))
 
     ## Update updated_at in hackers table
     cursor.execute(''' UPDATE hackers SET updated_at = ? WHERE badge_code = ?''', (timestamp, hacker_id))
