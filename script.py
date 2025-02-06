@@ -50,9 +50,9 @@ for hacker in hacker_data:
             VALUES (?, ?, ?, ?, ?)
         ''', (name, email, phone, badge_code, timestamp))
 
-        # cursor.execute('''
-        #                INSERT INTO scans (badge_code, activity_name, activity_category, scanned_at) VALUES (?, ?, ?, ?) ''',
-        #                (badge_code, 'Sign-In', 'Registration', timestamp))
+        cursor.execute('''
+                       INSERT INTO scans (badge_code, activity_name, activity_category, scanned_at) VALUES (?, ?, ?, ?) ''',
+                       (badge_code, 'Sign-In', 'Registration', timestamp))
                        
         added_count += 1
     except sqlite3.IntegrityError:

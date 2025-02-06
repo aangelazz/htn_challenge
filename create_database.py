@@ -18,13 +18,14 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS hackers (
 connection.commit()
 
 
-## Create a "scans" table
+## Create a "scans" table, with primary key being composite of both the badge_code and activity_name
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS scans (
         badge_code TEXT NOT NULL,
-        activity_name TEXT PRIMARY KEY UNIQUE NOT NULL,
+        activity_name TEXT NOT NULL,
         activity_category TEXT NOT NULL,
         scanned_at TEXT NOT NULL,
+        PRIMARY KEY (badge_code, activity_name),
         FOREIGN KEY (badge_code) REFERENCES hackers(badge_code) ON DELETE CASCADE)''')
 ## Commit the changes to the database
 connection.commit()

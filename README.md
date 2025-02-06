@@ -42,6 +42,14 @@ considerations: for the searching the database, might be able to just search the
 - while i could have chosen to close the connection and not update any of the fields requested after finding that email is invalid, i chose to proceed only by not updating email and assuming that the other information was correct. this is so that each of the other fields (phone, name) could be updated immediately after so i would not have to store a list of commands i would later give to the sql connection
 
 - reqriting functions like get_exact_time in each file because very short and did not need a separate file for it, also do not need to import it every time, but cannotn import from one file (e.g. i did that with script.py into app.py but when running app.py, it would import script.py, exiting and forcing the app.py to have script.py's functionality)
+-
+- for scans, i am creating a composite key so that the unique identifier activity_name can be scanned multiple times, given that it is not with a badge_code that has been scanned for that activity before.
+
+- output of the get all hackers function puts the scnas in a list, which could not be formatted otherwise
+
+- decided to manually select the parts of scans that are to be outputted to fit the user information
+- do not have to add a scans section for a new created hacker, will automatically be done when a scan is actually made
+- however, the big json file includes the scans, sort of an initializing scan as if they just checked into the event
 
 ---
 

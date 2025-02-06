@@ -21,13 +21,44 @@ def get_hackers():
     cursor.execute('SELECT * FROM hackers')
     hackers = cursor.fetchall()
 
+    ## Fetch all scans for all hackers
+    cursor.execute('SELECT badge_code, activity_name, activity_category, scanned_at FROM scans')
+    scans = cursor.fetchall()
+
+    ## Formatting all scans by hackers' badge_code
+    scans_per_hacker = {}
+    for scan in scans:
+        badge_code = scan[0]
+        if badge_code not in scans_per_hacker:
+            scans_per_hacker[badge_code] = []
+        scans_per_hacker[badge_code].append({
+            "activity_name": scan[1],
+            "activity_category": scan[2],
+            "scanned_at": scan[3]
+        })
+        
+
+    ## Putting together list to format all hackers' data
+    hackers_list = []
+    for hacker in hackers:
+        hacker_data = {
+            "name": hacker[0],
+            "email": hacker[1],
+            "phone": hacker[2],
+            "badge_code": hacker[3],
+            "updated_at": hacker[4],
+            "scans": scans_per_hacker.get(hacker[3], [])
+        }
+        hackers_list.append(hacker_data)
+
+
     ## Closing the cursor and database connection
     cursor.close()
     connection.close()
 
 
     ## returning all of the hackers as JSON
-    return jsonify(hackers)
+    return jsonify(hackers_list)
 
 
 ## Endpoint to create a new hacker, in case one was not registered properly
