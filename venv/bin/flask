@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/Users/angelazhuang/Documents/VS CODE/htn/venv/bin/python3" "$0" "$@"
-' '''
+#!/Users/angelazhuang/Documents/vs/htn/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
