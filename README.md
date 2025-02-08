@@ -1,4 +1,4 @@
-## Hack the North Backend Challenge Submission
+# Hack the North Backend Challenge Submission
 
 This project acts as a submission to my application to be on Hack The North's 2025 Organizing team.
 
@@ -70,7 +70,7 @@ Last Updated: Friday, February 7th, 2025
 
 ---
 
-**Credits**
+##Credits
 
 Author: This project was created and developed by Angela Zhuang
 
