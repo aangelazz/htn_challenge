@@ -27,7 +27,7 @@ In addition to these required features, I decided to include simple endpoints to
 
 ## Assumptions
 
-Aside from the given assumptions in the instructions, I have made some assumtions:
+Aside from the given rules in the instructions, I made the following assumptions:
 
 - All badge_codes are strings following the specified format (four words connected with dashes), and that they can be set as unique fields that are NOT null in the table for "hackers" of the database. Badge codes, once assigned, should not be changed (it is an immutable identifier).
 
@@ -56,7 +56,11 @@ Aside from the given assumptions in the instructions, I have made some assumtion
 
 ## Important Decisions
 
-- badge codes used as main key and i set the rule that they cannot be emptythere were 5 such users in the example_data.json file that had null badge codes
+### Tech Stack
+- Firstl
+
+### Database
+badge codes used as main key and i set the rule that they cannot be emptythere were 5 such users in the example_data.json file that had null badge codes
 - Splitting each endpoint into individual functions, regardless of them being in the same route
   Endpoints all in the same main file, app.py, to ensure cohesiveness
 - adding, with datetime, a function that prints in the exact format of the given dataset (SQL default time does not record milliseconds)
@@ -65,17 +69,7 @@ Aside from the given assumptions in the instructions, I have made some assumtion
   what types of data points do i add key
   e.g. how many people attended the coffee chat/specific event today? go see how many people (searching off of something that might not usually be a key)
 
-considerations: for the searching the database, might be able to just search the entire massive big database if the users are small enough, just 1000 participants can be fast enough for the program
-
-- but since doing a lot of looping and searching individually, i can make another sql database table with the number of activities to enable functionality like ensuring only 1 mignight snack event per person and checking if the person's id name or email is alreday on the event in the activities table, which has individual activity ids for a reason
-- also good for if the hackathon wants to expand or if the users are scanning 4390439 times
-- questions i needed to consider: what happens when given an invalid user for update, delete, or get_hacker? would i let the sql error occur, or would i need to create a testcase for that and ouput my own custom error message?
-
-- in my update_users function for the updating endpoint, i needed to check if a change was made and whether it was valid in the fields where ids needed to be unique, and if they were not NULL, and then change only them, in the end there are only 6 fields, 4 of which were changeable (scans would be changed in a different function, and updated_at would be automatically changed only if another field was updated)
-
-- i started by making the main identifier for each hacker to be a number, incremented by 1 for each additional hacker, but that was just unnecessary information, so i opted to use badge_codes, as they would be unique and could probably send the most information for future functionality
-
-- while i could have chosen to close the connection and not update any of the fields requested after finding that email is invalid, i chose to proceed only by not updating email and assuming that the other information was correct. this is so that each of the other fields (phone, name) could be updated immediately after so i would not have to store a list of commands i would later give to the sql connection
+### Coding the Endpoints
 
 - reqriting functions like get_exact_time in each file because very short and did not need a separate file for it, also do not need to import it every time, but cannotn import from one file (e.g. i did that with script.py into app.py but when running app.py, it would import script.py, exiting and forcing the app.py to have script.py's functionality)
 -
@@ -88,6 +82,21 @@ considerations: for the searching the database, might be able to just search the
 - however, the big json file includes the scans, sort of an initializing scan as if they just checked into the event
 - due to my time constraints, i chose not to validate all user inputs, like how i assumed that min_frequency is an integer less than or equal to max_frequency, or that user emails and phones had correct characters (e.g. @gmail.com) - this is also not very important, as data intake software such as Google Forms would also be able to check if dates and emails/URLs are correct
 - before in the testing, trying to add a hacker that was already added would give me the error, sqlite3.IntegrityError: UNIQUE constraint failed: hackers.badge_code, after which all other commands would have resulted in an error ending with "sqlite3.OperationalError: database is locked"
+
+### Other
+Furthermore, there are some considerations that I made about the overall scope of my project:
+- for the searching the database, might be able to just search the entire massive big database if the users are small enough, just 1000 participants can be fast enough for the program
+
+- but since doing a lot of looping and searching individually, i can make another sql database table with the number of activities to enable functionality like ensuring only 1 mignight snack event per person and checking if the person's id name or email is alreday on the event in the activities table, which has individual activity ids for a reason
+- also good for if the hackathon wants to expand or if the users are scanning 4390439 times
+- questions i needed to consider: what happens when given an invalid user for update, delete, or get_hacker? would i let the sql error occur, or would i need to create a testcase for that and ouput my own custom error message?
+
+- in my update_users function for the updating endpoint, i needed to check if a change was made and whether it was valid in the fields where ids needed to be unique, and if they were not NULL, and then change only them, in the end there are only 6 fields, 4 of which were changeable (scans would be changed in a different function, and updated_at would be automatically changed only if another field was updated)
+
+- i started by making the main identifier for each hacker to be a number, incremented by 1 for each additional hacker, but that was just unnecessary information, so i opted to use badge_codes, as they would be unique and could probably send the most information for future functionality
+
+- while i could have chosen to close the connection and not update any of the fields requested after finding that email is invalid, i chose to proceed only by not updating email and assuming that the other information was correct. this is so that each of the other fields (phone, name) could be updated immediately after so i would not have to store a list of commands i would later give to the sql connection
+
 
 ---
 
