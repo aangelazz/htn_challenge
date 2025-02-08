@@ -210,7 +210,7 @@ def update_hacker(hacker_id):
 
 
         ## Update Timestamp after making all changes
-        cursor.execute('UPDATE hackers SET updated_at = ? WHERE badge_code = ?', (name, hacker_id))
+        cursor.execute('UPDATE hackers SET updated_at = ? WHERE badge_code = ?', (timestamp, hacker_id))
         connection.commit()
     
 
@@ -222,9 +222,6 @@ def update_hacker(hacker_id):
         print("Valid hacker information updated succesfully")
         
     return get_hacker(hacker_id)
-
-
-
 
 ## Endpoint to add scan for a hacker
 @app.route('/scan/<string:hacker_id>', methods=['PUT'])
@@ -270,6 +267,61 @@ def add_scan(hacker_id):
     return get_hacker(hacker_id)
 
 
+## Endpoint that provides scan data
+@app.route("/scans", methods = ['GET'])
+def scan_data():
+    min_frequency = request.args.get("min_frequency", type=int) # assumes that min_frequency is less than or equal to max_frequency
+    max_frequency = request.args.get("max_frequency", type=int)
+    activity_category = request.args.get("activity_category", type=str)
+
+    ## Connect to the database
+    connection = sqlite3.connect('participants.db')
+    cursor = connection.cursor()
+
+    ## SQL Query to get all activities' scan frequencies, will filter on them after
+    query = '''SELECT activity_name, activity_category, COUNT(*) as frequency FROM scans'''
+
+    ## Define the optionally included conditions for the results
+    conditions = []
+    parameters = []
+
+    
+    ## Go through each condition, and append to conditions and parameters if given
+    if activity_category:
+        conditions.append("activity_category = ?")
+        parameters.append(activity_category)
+
+    if conditions:
+        query += " WHERE " + " AND ".join(conditions)
+
+    query += " GROUP BY activity_name, activity_category"
+    
+    ## Frequency specifications
+    frequencies = []
+    if min_frequency is not None:
+        frequencies.append("COUNT(*) >= ?")
+        parameters.append(min_frequency)
+    if max_frequency is not None:
+        frequencies.append("COUNT(*) <= ?")
+        parameters.append(max_frequency)
+
+
+    if frequencies:
+        query += " HAVING " + " AND ".join(frequencies)
+
+    print("Executing SQL Query:", query)
+    print("With Parameters:", parameters)
+    
+    ## sending out query
+    cursor.execute(query, parameters)
+    results = cursor.fetchall()
+
+    ## Close connection to database
+    cursor.close()
+    connection.close()
+
+    return jsonify(results)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
-
