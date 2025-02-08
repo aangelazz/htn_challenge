@@ -57,6 +57,7 @@ Aside from the given rules in the instructions, I made the following assumptions
 ## Important Decisions
 
 ### Tech Stack
+
 - Going into this challenge with no API development experience, I put extensive thought into my decision between REST and GraphQL, and ultimately chose the former for its simplicity and shorter HTTP requests.
 
 - Python is my first and strongest language, so I wrote code with the Python/Flask lanaguage and framework duo in my VS Code environment.
@@ -64,36 +65,28 @@ Aside from the given rules in the instructions, I made the following assumptions
 - I used componenents of the provided boilerplate, but time constraints resulted in my decision not to incorporate Docker while exporting my project.
 
 ### Database
+
 - Upon practicing creating databases, I noticed that an integer id is often used for the PRIMARY KEY in SQL tables. However, having this extra number field was less convenient when printing the hackers' info in my endpoints. I decided to use `badge_codes` as the primary key, as it was already defined to be unique for all users, and because it is the basis for the scanning functionality (as opposed to the email, which was also unique but contained not as useful information in this context). I further set the badge_code to be NOT NULL, as I find it most logical that only a hacker that has obtained their badge (and non-empty badge_code) can participate in the hackathon. This means that five of the hackers in the example_data.json file were not added to the database (you see this when you run script.py).
 
-- In my database, I created two tables that encompassed the core required functionality. The "scans" table is connected to the main "hackers" info table via a foreign key so that all scans can be attributed to both an activity and a hacker. I also found it logical that one user should only need to scan into one activity once, so the primary key for "scans" is a composite of `activity_name` and `badge_code`, so that no pair can be duplicated. I acknowledge the limitation this might have on events where frequent entry and exit is allowed. 
+- In my database, I created two tables that encompassed the core required functionality. The "scans" table is connected to the main "hackers" info table via a foreign key so that all scans can be attributed to both an activity and a hacker. I also found it logical that one user should only need to scan into one activity once, so the primary key for "scans" is a composite of `activity_name` and `badge_code`, so that no pair can be duplicated. I acknowledge the limitation this might have on events where frequent entry and exit is allowed, but could cover the functionality of the Midnight Snack bonus!
 
 - Another consideration is not to order the database by name or badge_code (however, "scans" will automatically be ordered chronologically when new scans are added to the bottom of the table). This is because I do not believe ordering will increase efficiency of the program when running commands such as getting aggregate data - the database is not meant to be large (only some thousands of hackers in the table) and should be fast to search through. However, organization of hackers may become relevant if HTN participant sizes increase on a large scale.
 
+- I learned that database connections should be closed frequently and changes should be committed as soon as finished, as SQL can lock the database while executing unclosed commands. Thus, my code has many instances of the opening and closing of cursors and connections.
+
 ### Coding the Endpoints
+
 - I decided to keep each endpoint in their individual functions, regardless of some having the same or similar routes - their HTTP methods would be different. Endpoints were all written in the same main file, app.py, for cohesiveness and convenience.
 
 - Since SQL's TIMESTAMP function did not output timestamps with milliseconds, I implemented, with datetime, a function get_exact_time that provides the timestamp in exact ISO 8601 format. This function was written in two files instead of imported, as it was very short (importing files to one another caused errors that were not worth solving).
 
-- output of the get all hackers function puts the scnas in a list, which could not be formatted otherwise
+- For functions like get_hacker, I decided that the simplest implementation to my ability was to output the user's info from "hackers" and manually format the user's info from "scans" to be inside of the returned output.
 
-- decided to manually select the parts of scans that are to be outputted to fit the user information
-- do not have to add a scans section for a new created hacker, will automatically be done when a scan is actually made
-- however, the big json file includes the scans, sort of an initializing scan as if they just checked into the event
-- due to my time constraints, i chose not to validate all user inputs, like how i assumed that min_frequency is an integer less than or equal to max_frequency, or that user emails and phones had correct characters (e.g. @gmail.com) - this is also not very important, as data intake software such as Google Forms would also be able to check if dates and emails/URLs are correct
-- before in the testing, trying to add a hacker that was already added would give me the error, sqlite3.IntegrityError: UNIQUE constraint failed: hackers.badge_code, after which all other commands would have resulted in an error ending with "sqlite3.OperationalError: database is locked"
+- When deleting a hacker from "hackers", SQL has a field attribute to delete them from "scans" as well. It is not necessary to also add scans for when a hacker is created, as a hacker's scans will automatically be added when a scan is actually made. This is effective because the hacker's new scans will automatically be re-formatted upon the next call of `get_hacker` or `get_hackers`.
 
+- Througout the code, I implemented checks to ensure that requested users existed in the database and that commands were found - this was to ensure the smooth running of the program. However, due to my time constraints, I chose not to validate **every** user input, so I made the assumption that they are correct. For example, I choose to believe that `min_frequency` in `scan_data` will be an integer less than or equal to `max_frequency`, or that user emails are correct addresses.
 
-- but since doing a lot of looping and searching individually, i can make another sql database table with the number of activities to enable functionality like ensuring only 1 mignight snack event per person and checking if the person's id name or email is alreday on the event in the activities table, which has individual activity ids for a reason
-- also good for if the hackathon wants to expand or if the users are scanning 4390439 times
-- questions i needed to consider: what happens when given an invalid user for update, delete, or get_hacker? would i let the sql error occur, or would i need to create a testcase for that and ouput my own custom error message?
-
-- in my update_users function for the updating endpoint, i needed to check if a change was made and whether it was valid in the fields where ids needed to be unique, and if they were not NULL, and then change only them, in the end there are only 6 fields, 4 of which were changeable (scans would be changed in a different function, and updated_at would be automatically changed only if another field was updated)
-
-- i started by making the main identifier for each hacker to be a number, incremented by 1 for each additional hacker, but that was just unnecessary information, so i opted to use badge_codes, as they would be unique and could probably send the most information for future functionality
-
-- while i could have chosen to close the connection and not update any of the fields requested after finding that email is invalid, i chose to proceed only by not updating email and assuming that the other information was correct. this is so that each of the other fields (phone, name) could be updated immediately after so i would not have to store a list of commands i would later give to the sql connection
-
+In the future, I have ideas for how I can improve on the functionality of this code, and increase the endpoints my API server provides. For example, I can make more SQL databases or fields, like for a check-in & check-out system, with timestamps of both entry and exit for more precise attendance tracking. I could even enhance my API by implementing authentication and access control to ensure only authorized users can modify data. Additionally, optimizing database performance by improving input validation and deploying to a cloud service would increase accessibility. Ultimately, I think this project has strengthened my skills in API development, and I look forward to improving.
 
 ---
 
