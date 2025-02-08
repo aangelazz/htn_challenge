@@ -257,10 +257,19 @@ def add_scan(hacker_id):
         connection.close()
         ## returns error with HTTP status code 404 (not found - hacker not found)
         return jsonify({"error":"hacker was not found"}), 404
+    
+    cursor.execute('''SELECT 1 FROM scans WHERE badge_code = ? AND activity_name = ?''',
+                   (hacker_id, name))
+    existing_scan = cursor.fetchone()
+
+    if existing_scan:
+        cursor.close()
+        connection.close()
+        return jsonify({"error": "Scan already exists for this hacker."}), 400
 
     ## Get current timestamp
     timestamp = get_exact_time()
-
+    
     ## Insert scan into scans table
     cursor.execute('''INSERT INTO scans (badge_code, activity_name, activity_category, scanned_at) VALUES (?, ?, ?, ?)''',
                      (hacker_id, name, cat, timestamp))

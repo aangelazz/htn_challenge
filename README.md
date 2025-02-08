@@ -1,11 +1,6 @@
-# ## HackTheBackend
+## Hack the North Backend Challenge Submission
 
 This project acts as a submission to my application to be on Hack The North's 2025 Organizing team.
-
----
-
-Credits
-Author: This project was created and developed by Angela Zhuang, with help only from online resources and
 
 ---
 
@@ -52,6 +47,7 @@ considerations: for the searching the database, might be able to just search the
 - however, the big json file includes the scans, sort of an initializing scan as if they just checked into the event
 - due to my time constraints, i chose not to validate all user inputs, like how i assumed that min_frequency is an integer less than or equal to max_frequency, or that user emails and phones had correct characters (e.g. @gmail.com) - this is also not very important, as data intake software such as Google Forms would also be able to check if dates and emails/URLs are correct
 - before in the testing, trying to add a hacker that was already added would give me the error, sqlite3.IntegrityError: UNIQUE constraint failed: hackers.badge_code, after which all other commands would have resulted in an error ending with "sqlite3.OperationalError: database is locked"
+
 ---
 
 Setup Instructions:
@@ -62,6 +58,8 @@ Setup Instructions:
 
 Instructions for Use
 
+- Set Up the virtual environment
+
 ---
 
 Tests
@@ -69,3 +67,16 @@ Tests
 ---
 
 Last Updated: Friday, February 7th, 2025
+
+---
+
+Credits
+Author: This project was created and developed by Angela Zhuang
+
+Works Referenced:
+- https://www.youtube.com/watch?v=Sf-7zXBB_mg
+- https://www.youtube.com/watch?v=Sf-7zXBB_mg
+- https://labex.io/tutorials/flask-building-flask-rest-api-with-sqlite-298842
+- https://www.postman.com/api-platform/api-documentation/
+
+Acknowledgement: This project was implemented with the help of the GenAI model ChatGPT
