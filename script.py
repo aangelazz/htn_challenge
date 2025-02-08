@@ -1,3 +1,7 @@
+"""
+This file updates the database "participants.db" with all data from an inputted JSON file.
+"""
+
 import sqlite3
 import json
 import sys
@@ -14,11 +18,11 @@ if len(sys.argv) != 2:
     print("Error: JSON file not found")
     sys.exit(1)
 
+## retrieving the JSON file
+file = sys.argv[1] 
 
-file = sys.argv[1] # retrieving the JSON file
 
-
-## loading data from JSON file
+## Loading data from JSON file
 try:
     with open(file, "r") as json_file:
         hacker_data = json.load(json_file)
@@ -34,14 +38,15 @@ except json.JSONDecodeError:
 connection = sqlite3.connect("participants.db")
 cursor = connection.cursor()
 
-
-## Insert hackers into the database
-added_count = 0 # to keep track of number of hackers added to database
+## to keep track of number of hackers and scans added to database
+added_count = 0 
 scan_count = 0
 
+## Insert hackers into the database
 for hacker in hacker_data:
     name = hacker.get("name", "Unknown")
-    email = hacker.get("email", "Unknown").strip().lower() # since SQL is case-sensitive, make sure all emails are lowercase with no extra spaces
+    ## since SQL is case-sensitive, make sure all emails are lowercase with no extra spaces
+    email = hacker.get("email", "Unknown").strip().lower() 
     phone = hacker.get("phone", None)
     badge_code = hacker.get("badge_code", None)
     timestamp = get_exact_time()
@@ -65,7 +70,6 @@ for hacker in hacker_data:
                        (badge_code, activity_name, activity_category, scanned_at))
                 scan_count += 1
                        
-        
     except sqlite3.IntegrityError:
         print("\nSkipping hacker: either email or badge code is already used, or NULL")
         print(f"Name: {name}\nEmail: {email}\nBadge Code: '{badge_code}'\n")
@@ -76,5 +80,5 @@ connection.commit()
 cursor.close()
 connection.close()
 
-
+## Log the update
 print("Success, ", added_count," new hackers added successfully with ", scan_count, " total new scans")

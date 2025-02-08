@@ -1,4 +1,9 @@
+"""
+This file creates the database "participants.db" with which the API can be used in conjunction
+"""
+
 import sqlite3
+
 
 ## Connection to the database
 connection = sqlite3.connect('participants.db')
@@ -29,8 +34,6 @@ cursor.execute('''
         FOREIGN KEY (badge_code) REFERENCES hackers(badge_code) ON DELETE CASCADE)''')
 ## Commit the changes to the database
 connection.commit()
-
-
 
 
 ## Close the cursor and the database connection
