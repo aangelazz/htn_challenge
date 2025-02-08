@@ -291,7 +291,6 @@ def add_scan(hacker_id):
 ## Endpoint that provides scan data
 @app.route("/scans", methods = ['GET'])
 # MAKE SURE THAT WHEN RUNNING WITH CURL IN TERMINAL, PUT COMMAND IN QUOTES SO CAN PARSE
-#   e.g. curl -X GET "http://127.0.0.1:5000/scans?max_frequency=25&min_frequency=20&activity_category=activity"
 def scan_data():
     min_frequency = request.args.get("min_frequency", type=int) # assumes that min_frequency is less than or equal to max_frequency
     max_frequency = request.args.get("max_frequency", type=int)

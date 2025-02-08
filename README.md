@@ -64,20 +64,16 @@ Aside from the given rules in the instructions, I made the following assumptions
 - I used componenents of the provided boilerplate, but time constraints resulted in my decision not to incorporate Docker while exporting my project.
 
 ### Database
-badge codes used as main key and i set the rule that they cannot be emptythere were 5 such users in the example_data.json file that had null badge codes
-- Splitting each endpoint into individual functions, regardless of them being in the same route
-  Endpoints all in the same main file, app.py, to ensure cohesiveness
-- adding, with datetime, a function that prints in the exact format of the given dataset (SQL default time does not record milliseconds)
-- in my database, is one table enough or am i doing multiple tables or just one - and then how am i ordering the database? order might be faster but not necessarily (since theres many fields, i might try to order it on specific keys), which case
-  think about the wyas i would use the fdatabase
-  what types of data points do i add key
-  e.g. how many people attended the coffee chat/specific event today? go see how many people (searching off of something that might not usually be a key)
+- Upon practicing creating databases, I noticed that an integer id is often used for the PRIMARY KEY in SQL tables. However, having this extra number field was less convenient when printing the hackers' info in my endpoints. I decided to use `badge_codes` as the primary key, as it was already defined to be unique for all users, and because it is the basis for the scanning functionality (as opposed to the email, which was also unique but contained not as useful information in this context). I further set the badge_code to be NOT NULL, as I find it most logical that only a hacker that has obtained their badge (and non-empty badge_code) can participate in the hackathon. This means that five of the hackers in the example_data.json file were not added to the database (you see this when you run script.py).
+
+- In my database, I created two tables that encompassed the core required functionality. The "scans" table is connected to the main "hackers" info table via a foreign key so that all scans can be attributed to both an activity and a hacker. I also found it logical that one user should only need to scan into one activity once, so the primary key for "scans" is a composite of `activity_name` and `badge_code`, so that no pair can be duplicated. I acknowledge the limitation this might have on events where frequent entry and exit is allowed. 
+
+- Another consideration is not to order the database by name or badge_code (however, "scans" will automatically be ordered chronologically when new scans are added to the bottom of the table). This is because I do not believe ordering will increase efficiency of the program when running commands such as getting aggregate data - the database is not meant to be large (only some thousands of hackers in the table) and should be fast to search through. However, organization of hackers may become relevant if HTN participant sizes increase on a large scale.
 
 ### Coding the Endpoints
+- I decided to keep each endpoint in their individual functions, regardless of some having the same or similar routes - their HTTP methods would be different. Endpoints were all written in the same main file, app.py, for cohesiveness and convenience.
 
-- reqriting functions like get_exact_time in each file because very short and did not need a separate file for it, also do not need to import it every time, but cannotn import from one file (e.g. i did that with script.py into app.py but when running app.py, it would import script.py, exiting and forcing the app.py to have script.py's functionality)
--
-- for scans, i am creating a composite key so that the unique identifier activity_name can be scanned multiple times, given that it is not with a badge_code that has been scanned for that activity before.
+- Since SQL's TIMESTAMP function did not output timestamps with milliseconds, I implemented, with datetime, a function get_exact_time that provides the timestamp in exact ISO 8601 format. This function was written in two files instead of imported, as it was very short (importing files to one another caused errors that were not worth solving).
 
 - output of the get all hackers function puts the scnas in a list, which could not be formatted otherwise
 
@@ -87,9 +83,6 @@ badge codes used as main key and i set the rule that they cannot be emptythere w
 - due to my time constraints, i chose not to validate all user inputs, like how i assumed that min_frequency is an integer less than or equal to max_frequency, or that user emails and phones had correct characters (e.g. @gmail.com) - this is also not very important, as data intake software such as Google Forms would also be able to check if dates and emails/URLs are correct
 - before in the testing, trying to add a hacker that was already added would give me the error, sqlite3.IntegrityError: UNIQUE constraint failed: hackers.badge_code, after which all other commands would have resulted in an error ending with "sqlite3.OperationalError: database is locked"
 
-### Other
-Furthermore, there are some considerations that I made about the overall scope of my project:
-- for the searching the database, might be able to just search the entire massive big database if the users are small enough, just 1000 participants can be fast enough for the program
 
 - but since doing a lot of looping and searching individually, i can make another sql database table with the number of activities to enable functionality like ensuring only 1 mignight snack event per person and checking if the person's id name or email is alreday on the event in the activities table, which has individual activity ids for a reason
 - also good for if the hackathon wants to expand or if the users are scanning 4390439 times
