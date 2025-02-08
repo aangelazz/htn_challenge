@@ -108,7 +108,7 @@ Here's how you can set up my API in the same environment I used to develop it:
 
    `cd ~/htn`
 
-4. Run the file called `create_database.py` to initialize a database in the directory
+4. Run the file called `create_database.py` to initialize a database in the directory. In the GitHub repository, `participants.db` is already created, so you can delete and recreate if you choose.
 
    `python create_database.py`
 
