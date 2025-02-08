@@ -269,6 +269,8 @@ def add_scan(hacker_id):
 
 ## Endpoint that provides scan data
 @app.route("/scans", methods = ['GET'])
+# MAKE SURE THAT WHEN RUNNING WITH CURL IN TERMINAL, PUT COMMAND IN QUOTES SO CAN PARSE
+#   e.g. curl -X GET "http://127.0.0.1:5000/scans?max_frequency=25&min_frequency=20&activity_category=activity"
 def scan_data():
     min_frequency = request.args.get("min_frequency", type=int) # assumes that min_frequency is less than or equal to max_frequency
     max_frequency = request.args.get("max_frequency", type=int)
@@ -309,18 +311,21 @@ def scan_data():
     if frequencies:
         query += " HAVING " + " AND ".join(frequencies)
 
-    print("Executing SQL Query:", query)
-    print("With Parameters:", parameters)
-    
     ## sending out query
     cursor.execute(query, parameters)
     results = cursor.fetchall()
+
+
+    formatted = [
+        {"activity_name": row[0], "activity_category": row[1], "frequency": row[2]}
+        for row in results
+    ]
 
     ## Close connection to database
     cursor.close()
     connection.close()
 
-    return jsonify(results)
+    return jsonify(formatted)
 
 
 if __name__ == "__main__":
