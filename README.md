@@ -102,9 +102,9 @@ Here's how to set up the
    `python app.py`
 
 If everything went smoothly, you should see something like this:
-![image of successful result after running app.py](/var/folders/vy/sf1_zn2x00v8q_73qy7t_m1m0000gn/T/TemporaryItems/NSIRD_screencaptureui_BFmztA/Screenshot 2025-02-07 at 11.23.00 PM.png)
+![image of successful result after running app.py](image.png)
 
-Now the API is ready to be tested and for use.
+Now, the API is ready to be tested and for use.
 
 ---
 
