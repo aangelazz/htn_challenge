@@ -27,12 +27,36 @@ In addition to these required features, I decided to include simple endpoints to
 
 ## Assumptions
 
-- badge codes cannot be duplicated, nor can they be NULL: there were 5 such users in the example_data.json file that had null badge codes
+Aside from the given assumptions in the instructions, I have made some assumtions:
+
+- All badge_codes are strings following the specified format (four words connected with dashes), and that they can be set as unique fields that are NOT null in the table for "hackers" of the database. Badge codes, once assigned, should not be changed (it is an immutable identifier).
+
+- Names and phone numbers, however, can be duplicated across different hackers in the table. They are all strings as well.
+
+- Phone numbers do not need to follow a consistent format (like dashes and spacing).
+
+- Emails are unique and not null. Email updates must maintain uniqueness across all users.
+
+- A hacker can have many scans for different activities, but no same hacker has multiple scans for the same activity. A hacker can have no scans at all. There are no restrictions on how many activities a user can attend. Activities don't have explicit start/end times.
+
+- All timestamps are in the same timezone, based on the same formatting in the given example data. Timestamps are in ISO 8601 format, as stated in the challenge instructions. All timestamps are from the same year, but the events span multiple days, as consistent with a hackathon. I also do not think I have to handle timezone conversions.
+
+- Scans are ordered chronologically in the dataset, but this is simply as a result of new scans being added later than previous ones. Scan records are unchangeable once created.
+
+- `Updated_at` in the "hackers" table will be in timestamp format, according to the last time that any of the hacker's information was modified.
+- Each activity belongs to only one category, and no two categories have activities of the same name (because `activity_name` is unique across all scans - which is why it is used as an identifier).
+
+- `activity_name` and `activity_category` are strings (TEXT for SQL). The names use underscores instead of spaces so that they are one word. Activity names and categories are case-sensitive.
+
+- A user's presence in "scans" should be concurrent with their existence in "hackers."
+
+- I am also assuming that there is no need to validate email addresses, name of activities, phone numbers, and that I do not need to maintain a history record of user information that was changed.
 
 ---
 
 ## Important Decisions
 
+- badge codes used as main key and i set the rule that they cannot be emptythere were 5 such users in the example_data.json file that had null badge codes
 - Splitting each endpoint into individual functions, regardless of them being in the same route
   Endpoints all in the same main file, app.py, to ensure cohesiveness
 - adding, with datetime, a function that prints in the exact format of the given dataset (SQL default time does not record milliseconds)
