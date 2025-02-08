@@ -61,7 +61,7 @@ def get_hackers():
     connection.close()
 
     ## returning all of the hackers as JSON
-    return jsonify(hackers_list), 200
+    return jsonify(hackers_list)
 
 
 
@@ -101,7 +101,7 @@ def create_hacker():
     connection.close()
 
     ## Return a success message
-    return jsonify({'message': 'New Hacker created successfully'}), 201
+    return jsonify({'message': 'New Hacker created successfully'})
 
 
 
@@ -128,7 +128,7 @@ def delete_hacker(hacker_id):
     connection.close()
 
     ## Return message
-    return jsonify({'message': 'Hacker removed successfully'}), 200
+    return jsonify({'message': 'Success'})
 
 
 
@@ -227,7 +227,7 @@ def update_hacker(hacker_id):
         ## Log update
         print("Valid hacker information updated succesfully")
         
-    return get_hacker(hacker_id), 200
+    return get_hacker(hacker_id)
 
 
 
@@ -284,7 +284,7 @@ def add_scan(hacker_id):
 
     print("Scan recorded successfully")
 
-    return get_hacker(hacker_id), 200
+    return get_hacker(hacker_id)
 
 
 
@@ -345,7 +345,7 @@ def scan_data():
     cursor.close()
     connection.close()
 
-    return jsonify(formatted), 200
+    return jsonify(formatted)
 
 
 

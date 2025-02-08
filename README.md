@@ -84,7 +84,7 @@ Aside from the given rules in the instructions, I made the following assumptions
 
 - When deleting a hacker from "hackers", SQL has a field attribute to delete them from "scans" as well. It is not necessary to also add scans for when a hacker is created, as a hacker's scans will automatically be added when a scan is actually made. This is effective because the hacker's new scans will automatically be re-formatted upon the next call of `get_hacker` or `get_hackers`.
 
-- Throughout the code, I implemented checks to ensure that requested users existed in the database and that commands were found - this was to ensure the smooth running of the program. However, due to my time constraints, I chose not to validate **every** user input, so I made the assumption that they are correct. For example, I choose to believe that `min_frequency` in `scan_data` will be an integer less than or equal to `max_frequency`, or that user emails are correct addresses.
+- Throughout the code, I implemented checks to ensure that requested users existed in the database and that commands were found - this was to ensure the smooth running of the program. However, due to my time constraints, I chose not to validate **every** user input, so I made the assumption that they are correct. For example, I choose to believe that the hacker_id given to delete_hacker() exists in the table,`min_frequency` in `scan_data` will be an integer less than or equal to `max_frequency`, and that user emails are correct addresses.
 
 In the future, I have ideas for how I can improve on the functionality of this code, and increase the endpoints my API server provides. For example, I can make more SQL databases or fields, like for a check-in & check-out system, with timestamps of both entry and exit for more precise attendance tracking. I could even enhance my API by implementing authentication and access control to ensure only authorized users can modify data. Additionally, optimizing database performance by improving input validation and deploying to a cloud service would increase accessibility. Ultimately, I think this project has strengthened my skills in API development, and I look forward to improving.
 
@@ -136,15 +136,15 @@ On my computer system, I open a terminal window. I used `curl` to send in HTTP r
 
 - To get all of the hacker data (`get_hackers` in `app.py`) in JSON format, I run `curl -X GET http://127.0.0.1:5000/hackers`
 
-- To create a new hacker (`create_hacker`) with example badge code ABC123 (note that this does not adhere to the HTN badge_code naming system), I run `curl -X POST http://127.0.0.1:5000/hackers \ -H "Content-Type: application/json" \ -d '{"name": "John Doe", "email": "johndoe@example.com", "phone": "123-456-7890", "badge_code": "ABC123"}'`. The following commands work with the example hacker with badge code ABC123.
+- To create a new hacker (`create_hacker`) with example badge code ABC123 (note that this does not adhere to the HTN badge_code naming system), I run `curl -X POST http://127.0.0.1:5000/hackers -H "Content-Type: application/json" -d '{"name": "John Doe", "email": "johndoe@example.com", "phone": "123-456-7890", "badge_code": "ABC123"}'`. The following commands work with the example hacker with badge code ABC123.
 
 - To delete a hacker (`delete_hacker`), for example the one I just created, I run `curl -X DELETE http://127.0.0.1:5000/hackers/ABC123`
 
 - To get a specific hacker's information (`get_hacker`), if they exist, I run `curl -X GET http://127.0.0.1:5000/hackers/ABC123`
 
-- To update a specific hacker's information (`update_hacker`), I run `curl -X PUT http://127.0.0.1:5000/hackers/ABC123 \ -H "Content-Type: application/json" \ -d '{ "name": "Johnathan Doe", "email": "johnny@example.com", "phone": "987-654-3210"}'`. Note that I do not have to provide a change to ALL fields, any subset of the updateable fields will suffice.
+- To update a specific hacker's information (`update_hacker`), I run `curl -X PUT http://127.0.0.1:5000/hackers/ABC123  -H "Content-Type: application/json" -d '{"name": "Johnathan Doe", "email": "johnny@example.com", "phone": "987-654-3210"}'`. Note that I do not have to provide a change to ALL fields, any subset of the updateable fields will suffice.
 
-- To add a scan for a hacker (`add_scan`), I run `curl -X PUT http://127.0.0.1:5000/hackers/ABC123 \ -H "Content-Type: application/json" \ -d '{"name": "Johnathan Doe", "email": "johnny@example.com", "phone": "987-654-3210"}'`
+- To add a scan for a hacker (`add_scan`), I run `curl -X PUT http://127.0.0.1:5000/scan/ABC123 -H "Content-Type: application/json" -d '{"activity_name": "Hackathon Workshop", "activity_category": "Learning"}'`
 
 - To retrieve scan data (`scan_data`), with optional query parameters, I run `curl -X GET "http://127.0.0.1:5000/scans?min_frequency=1&max_frequency=50&activity_category=Learning"`
 
