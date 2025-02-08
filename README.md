@@ -4,17 +4,17 @@ This project acts as a submission to my application to be on Hack The North's 20
 
 ---
 
-API Description
+## API Description
 
 ---
 
-Assumptions
+## Assumptions
 
 - badge codes cannot be duplicated, nor can they be NULL: there were 5 such users in the example_data.json file that had null badge codes
 
 ---
 
-Important Decisions
+## Important Decisions
 
 - Splitting each endpoint into individual functions, regardless of them being in the same route
   Endpoints all in the same main file, app.py, to ensure cohesiveness
@@ -50,27 +50,29 @@ considerations: for the searching the database, might be able to just search the
 
 ---
 
-Setup Instructions:
+## Setup Instructions:
 
 - Here's how to connect this to my frontend
 
 ---
 
-Instructions for Use
+## Instructions for Use
 
 - Set Up the virtual environment
 
 ---
 
-Tests
+## Tests
 
 ---
 
-Last Updated: Friday, February 7th, 2025
+## Last Updated
+
+Friday, February 7th, 2025
 
 ---
 
-##Credits
+## Credits
 
 Author: This project was created and developed by Angela Zhuang
 
