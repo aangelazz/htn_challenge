@@ -12,7 +12,7 @@ This REST API backend is written with Python and Flask, with a database created 
 
 The API can handle direct HTTP requests to:
 
-- Output all hackers' data - including name, email, phone, badge_code, and information on scans
+- Output all hackers' data - including name, email, phone, badge code, and information on scans
 - Output the listed data for one specified hacker
 - Update subsets of the database fields with valid information
 - Add scans (complete with name, category, and time scanned), to the "scans" table with unique combinations of hacker badge codes and activity names
@@ -29,7 +29,7 @@ In addition to these required features, I decided to include simple endpoints to
 
 Aside from the given rules in the instructions, I made the following assumptions:
 
-- All badge_codes are strings following the specified format (four words connected with dashes), and that they can be set as unique fields that are NOT null in the table for "hackers" of the database. Badge codes, once assigned, should not be changed (it is an immutable identifier).
+- All `badge_code`s are strings following the specified format (four words connected with dashes), and that they can be set as unique fields that are NOT null in the table for "hackers" of the database. Badge codes, once assigned, should not be changed (it is an immutable identifier).
 
 - Names and phone numbers, however, can be duplicated across different hackers in the table. They are all strings as well.
 
@@ -43,7 +43,7 @@ Aside from the given rules in the instructions, I made the following assumptions
 
 - Scans are ordered chronologically in the dataset, but this is simply as a result of new scans being added later than previous ones. Scan records are unchangeable once created.
 
-- `Updated_at` in the "hackers" table will be in timestamp format, according to the last time that any of the hacker's information was modified.
+- `updated_at` in the "hackers" table will be in timestamp format, according to the last time that any of the hacker's information was modified.
 - Each activity belongs to only one category, and no two categories have activities of the same name (because `activity_name` is unique across all scans - which is why it is used as an identifier).
 
 - `activity_name` and `activity_category` are strings (TEXT for SQL). The names use underscores instead of spaces so that they are one word. Activity names and categories are case-sensitive.
@@ -66,11 +66,11 @@ Aside from the given rules in the instructions, I made the following assumptions
 
 ### Database
 
-- Upon practicing creating databases, I noticed that an integer id is often used for the PRIMARY KEY in SQL tables. However, having this extra number field was less convenient when printing the hackers' info in my endpoints. I decided to use `badge_codes` as the primary key, as it was already defined to be unique for all users, and because it is the basis for the scanning functionality (as opposed to the email, which was also unique but contained not as useful information in this context). I further set the badge_code to be NOT NULL, as I find it most logical that only a hacker that has obtained their badge (and non-empty badge_code) can participate in the hackathon. This means that five of the hackers in the example_data.json file were not added to the database (you see this when you run script.py).
+- Upon practicing creating databases, I noticed that an integer id is often used for the PRIMARY KEY in SQL tables. However, having this extra number field was less convenient when printing the hackers' info in my endpoints. I decided to use `badge_codes` as the primary key, as it was already defined to be unique for all users, and because it is the basis for the scanning functionality (as opposed to the email, which was also unique but contained not as useful information in this context). I further set the `badge_code` to be NOT NULL, as I find it most logical that only a hacker that has obtained their badge (and non-empty `badge_code`) can participate in the hackathon. This means that five of the hackers in the example_data.json file were not added to the database (you see this when you run script.py).
 
-- In my database, I created two tables that encompassed the core required functionality. The "scans" table is connected to the main "hackers" info table via a foreign key so that all scans can be attributed to both an activity and a hacker. I also found it logical that one user should only need to scan into one activity once, so the primary key for "scans" is a composite of `activity_name` and `badge_code`, so that no pair can be duplicated. I acknowledge the limitation this might have on events where frequent entry and exit is allowed, but could cover the functionality of the Midnight Snack bonus!
+- In my database, I created two tables that encompassed the core required functionality. The "scans" table is connected to the main "hackers" info table via a foreign key so that all scans can be attributed to both an activity and a hacker. I also found it logical that one user should only need to scan into one activity once, so the primary key for "scans" is a composite of `activity_name` and `badge_code`, so that no pair can be duplicated. I acknowledge the limitation this might have on events where frequent entry and exit is allowed, but it could cover the functionality of the Midnight Snack bonus!
 
-- Another consideration is not to order the database by name or badge_code (however, "scans" will automatically be ordered chronologically when new scans are added to the bottom of the table). This is because I do not believe ordering will increase efficiency of the program when running commands such as getting aggregate data - the database is not meant to be large (only some thousands of hackers in the table) and should be fast to search through. However, organization of hackers may become relevant if HTN participant sizes increase on a large scale.
+- Another consideration is not to order the database by name or badge_code (however, "scans" will automatically be ordered chronologically when new scans are added to the bottom of the table). This is because I do not believe ordering will increase efficiency of the program when running commands such as getting aggregate data - the database is not meant to be large (only some thousands of hackers in the table) and should be fast to search through. However, improved organization of hackers may become relevant if HTN participant sizes increase on a large scale.
 
 - I learned that database connections should be closed frequently and changes should be committed as soon as finished, as SQL can lock the database while executing unclosed commands. Thus, my code has many instances of the opening and closing of cursors and connections.
 
@@ -78,13 +78,13 @@ Aside from the given rules in the instructions, I made the following assumptions
 
 - I decided to keep each endpoint in their individual functions, regardless of some having the same or similar routes - their HTTP methods would be different. Endpoints were all written in the same main file, app.py, for cohesiveness and convenience.
 
-- Since SQL's TIMESTAMP function did not output timestamps with milliseconds, I implemented, with datetime, a function get_exact_time that provides the timestamp in exact ISO 8601 format. This function was written in two files instead of imported, as it was very short (importing files to one another caused errors that were not worth solving).
+- Since SQL's TIMESTAMP function did not output timestamps with milliseconds, I implemented, with datetime, a function `get_exact_time` that provides the timestamp in exact ISO 8601 format. This function was written in two files instead of imported, as it was very short (importing files to one another caused errors that were not worth solving).
 
-- For functions like get_hacker, I decided that the simplest implementation to my ability was to output the user's info from "hackers" and manually format the user's info from "scans" to be inside of the returned output.
+- For functions like `get_hacker`, I decided that the simplest implementation to my ability was to output the user's info from "hackers" and manually format the user's info from "scans" to be inside of the returned output.
 
 - When deleting a hacker from "hackers", SQL has a field attribute to delete them from "scans" as well. It is not necessary to also add scans for when a hacker is created, as a hacker's scans will automatically be added when a scan is actually made. This is effective because the hacker's new scans will automatically be re-formatted upon the next call of `get_hacker` or `get_hackers`.
 
-- Throughout the code, I implemented checks to ensure that requested users existed in the database and that commands were found - this was to ensure the smooth running of the program. However, due to my time constraints, I chose not to validate **every** user input, so I made the assumption that they are correct. For example, I choose to believe that the hacker_id given to delete_hacker() exists in the table,`min_frequency` in `scan_data` will be an integer less than or equal to `max_frequency`, and that user emails are correct addresses.
+- Throughout the code, I implemented checks to ensure that requested users existed in the database and that commands were found - this was to ensure the smooth running of the program. However, due to my time constraints, I chose not to validate **every** user input, so I made the assumption that they are correct. For example, I choose to believe that the `hacker_id` given to `delete_hacker` exists in the table,`min_frequency` in `scan_data` will be an integer less than or equal to `max_frequency`, and that user emails are correct addresses.
 
 In the future, I have ideas for how I can improve on the functionality of this code, and increase the endpoints my API server provides. For example, I can make more SQL databases or fields, like for a check-in & check-out system, with timestamps of both entry and exit for more precise attendance tracking. I could even enhance my API by implementing authentication and access control to ensure only authorized users can modify data. Additionally, optimizing database performance by improving input validation and deploying to a cloud service would increase accessibility. Ultimately, I think this project has strengthened my skills in API development, and I look forward to improving.
 
@@ -148,7 +148,7 @@ On my computer system, I open a terminal window. I used `curl` to send in HTTP r
 
 - To retrieve scan data (`scan_data`), with optional query parameters, I run `curl -X GET "http://127.0.0.1:5000/scans?min_frequency=1&max_frequency=50&activity_category=Learning"`
 
-It is worth noting that although I have checked for several instances of invalid request entries (e.g. get_hacker being given a hacker badge_code that does not exist in the database), I am assuming that input will usually be valid. I acknowledge that if an invalid input is given to code without error-checking measures, it can break the SQL database definition rules that I have set (e.g. UNIQUE fields like activity_name in "scans" table), and that further commands will lead to an error like `sqlite3.OperationalError: database is locked` for the rest of the session.
+It is worth noting that although I have checked for several instances of invalid request entries (e.g. `get_hacker` being given a hacker `badge_code` that does not exist in the database), I am assuming that input will usually be valid. I acknowledge that if an invalid input is given to code without error-checking measures, it can break the SQL database definition rules that I have set (e.g. UNIQUE fields like `activity_name` in "scans" table), and that further commands will lead to an error like `sqlite3.OperationalError: database is locked` for the rest of the session.
 
 ---
 
