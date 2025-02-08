@@ -70,7 +70,8 @@ Last Updated: Friday, February 7th, 2025
 
 ---
 
-Credits
+**Credits**
+
 Author: This project was created and developed by Angela Zhuang
 
 Works Referenced:
