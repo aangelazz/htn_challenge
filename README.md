@@ -20,7 +20,7 @@ The API can handle direct HTTP requests to:
 
 In addition to these required features, I decided to include simple endpoints to **create** and **delete** hackers from the database, as I believe this could be useful during the hackathon if singular requests must be made to update a participant's inclusion status. The API can thus:
 
-- Write to the "hacker" table with a new hacker's information
+- Write to the "hackers" table with a new hacker's information
 - Remove a hacker from the table, should circumstances need it (e.g. badge was lost or no longer works)
 
 ---
@@ -57,7 +57,11 @@ Aside from the given rules in the instructions, I made the following assumptions
 ## Important Decisions
 
 ### Tech Stack
-- Firstl
+- Going into this challenge with no API development experience, I put extensive thought into my decision between REST and GraphQL, and ultimately chose the former for its simplicity and shorter HTTP requests.
+
+- Python is my first and strongest language, so I wrote code with the Python/Flask lanaguage and framework duo in my VS Code environment.
+
+- I used componenents of the provided boilerplate, but time constraints resulted in my decision not to incorporate Docker while exporting my project.
 
 ### Database
 badge codes used as main key and i set the rule that they cannot be emptythere were 5 such users in the example_data.json file that had null badge codes
