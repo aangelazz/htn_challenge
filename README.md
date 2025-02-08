@@ -69,11 +69,7 @@ considerations: for the searching the database, might be able to just search the
 
 ## Setup Instructions:
 
-Here's how to set up the
-
----
-
-## Instructions for Use
+Here's how you can set up my API in the same environment I used to develop it:
 
 1. Set up the Python virtual environment for use on a local machine
 
@@ -102,9 +98,16 @@ Here's how to set up the
    `python app.py`
 
 If everything went smoothly, you should see something like this:
+
 ![image of successful result after running app.py](image.png)
 
 Now, the API is ready to be tested and for use.
+
+---
+
+## Instructions for Use
+
+
 
 ---
 
