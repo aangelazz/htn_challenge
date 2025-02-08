@@ -10,7 +10,7 @@ This REST API backend is written with Python and Flask, with a database created 
 
 ### Endpoint Features
 
-The API can handle direct HTTP requests to
+The API can handle direct HTTP requests to:
 
 - Output all hackers' data - including name, email, phone, badge_code, and information on scans
 - Output the listed data for one specified hacker
@@ -18,7 +18,7 @@ The API can handle direct HTTP requests to
 - Add scans (complete with name, category, and time scanned), to the "scans" table with unique combinations of hacker badge codes and activity names
 - Output aggregate data about the scans for each activity, with optional query parameters to filter results
 
-In addition to these required features, I decided to include simple endpoints to **create** and **delete** hackers from the database, as I believe this could be useful during the hackathon if singular requests must be made to update a participant's inclusion status. The API can thus
+In addition to these required features, I decided to include simple endpoints to **create** and **delete** hackers from the database, as I believe this could be useful during the hackathon if singular requests must be made to update a participant's inclusion status. The API can thus:
 
 - Write to the "hacker" table with a new hacker's information
 - Remove a hacker from the table, should circumstances need it (e.g. badge was lost or no longer works)
@@ -76,22 +76,29 @@ Here's how to set up the
 ## Instructions for Use
 
 1. Set up the Python virtual environment for use on a local machine
+
    `python3 -m venv venv`
+
    `source venv/bin/activate` (for macOS)
 
 2. Inside the venv, install all requirements
+
    `pip install -r requirements.txt`
 
 3. From a new terminal, ensure that the current directory is `htn`
+
    `cd ~/htn`
 
 4. Run the file called `create_database.py` to initialize a database in the directory
+
    `python create_database.py`
 
 5. If to be used immediately with a dataset, run the file called `script.py` with a JSON file containing a dataset of hackers' information. In this case, the sample file is located inside `json_data`:
+
    `python script.py json_data/example_data.json`
 
 6. Run the main program contained in `app.py`
+
    `python app.py`
 
 If everything went smoothly, you should see something like this:
