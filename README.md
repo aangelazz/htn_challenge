@@ -50,7 +50,8 @@ considerations: for the searching the database, might be able to just search the
 - decided to manually select the parts of scans that are to be outputted to fit the user information
 - do not have to add a scans section for a new created hacker, will automatically be done when a scan is actually made
 - however, the big json file includes the scans, sort of an initializing scan as if they just checked into the event
-
+- due to my time constraints, i chose not to validate all user inputs, like how i assumed that min_frequency is an integer less than or equal to max_frequency, or that user emails and phones had correct characters (e.g. @gmail.com) - this is also not very important, as data intake software such as Google Forms would also be able to check if dates and emails/URLs are correct
+- before in the testing, trying to add a hacker that was already added would give me the error, sqlite3.IntegrityError: UNIQUE constraint failed: hackers.badge_code, after which all other commands would have resulted in an error ending with "sqlite3.OperationalError: database is locked"
 ---
 
 Setup Instructions:

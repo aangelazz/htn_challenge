@@ -4,7 +4,6 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-
 ## Gets current timestamp with millisecond precision
 def get_exact_time():
     return datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
@@ -75,6 +74,15 @@ def create_hacker():
     ## Connect to the database
     connection = sqlite3.connect('participants.db')
     cursor = connection.cursor()
+
+    # Check if the badge_code already exists in the hackers table
+    cursor.execute('SELECT 1 FROM hackers WHERE badge_code = ?', (badge_code,))
+    existing_hacker = cursor.fetchone()
+
+    if existing_hacker:
+        cursor.close()
+        connection.close()
+        return jsonify({'error': f'Hacker with badge_code {badge_code} already exists.'}), 400
 
     ## Execute the SQL query to insert a new hacker
     cursor.execute('INSERT INTO hackers (name, email, phone, badge_code, updated_at) VALUES (?, ?, ?, ?, ?)', 
