@@ -60,9 +60,9 @@ Aside from the given rules in the instructions, I made the following assumptions
 
 - Going into this challenge with no API development experience, I put extensive thought into my decision between REST and GraphQL, and ultimately chose the former for its simplicity and shorter HTTP requests.
 
-- Python is my first and strongest language, so I wrote code with the Python/Flask lanaguage and framework duo in my VS Code environment.
+- Python is my first and strongest language, so I wrote code with the Python/Flask language and framework duo in my VS Code environment.
 
-- I used componenents of the provided boilerplate, but time constraints resulted in my decision not to incorporate Docker while exporting my project.
+- I used components of the provided boilerplate, but time constraints resulted in my decision not to incorporate Docker while exporting my project.
 
 ### Database
 
@@ -84,7 +84,7 @@ Aside from the given rules in the instructions, I made the following assumptions
 
 - When deleting a hacker from "hackers", SQL has a field attribute to delete them from "scans" as well. It is not necessary to also add scans for when a hacker is created, as a hacker's scans will automatically be added when a scan is actually made. This is effective because the hacker's new scans will automatically be re-formatted upon the next call of `get_hacker` or `get_hackers`.
 
-- Througout the code, I implemented checks to ensure that requested users existed in the database and that commands were found - this was to ensure the smooth running of the program. However, due to my time constraints, I chose not to validate **every** user input, so I made the assumption that they are correct. For example, I choose to believe that `min_frequency` in `scan_data` will be an integer less than or equal to `max_frequency`, or that user emails are correct addresses.
+- Throughout the code, I implemented checks to ensure that requested users existed in the database and that commands were found - this was to ensure the smooth running of the program. However, due to my time constraints, I chose not to validate **every** user input, so I made the assumption that they are correct. For example, I choose to believe that `min_frequency` in `scan_data` will be an integer less than or equal to `max_frequency`, or that user emails are correct addresses.
 
 In the future, I have ideas for how I can improve on the functionality of this code, and increase the endpoints my API server provides. For example, I can make more SQL databases or fields, like for a check-in & check-out system, with timestamps of both entry and exit for more precise attendance tracking. I could even enhance my API by implementing authentication and access control to ensure only authorized users can modify data. Additionally, optimizing database performance by improving input validation and deploying to a cloud service would increase accessibility. Ultimately, I think this project has strengthened my skills in API development, and I look forward to improving.
 
@@ -136,7 +136,7 @@ On my computer system, I open a terminal window. I used `curl` to send in HTTP r
 
 - To get all of the hacker data (`get_hackers` in `app.py`) in JSON format, I run `curl -X GET http://127.0.0.1:5000/hackers`
 
-- To create a new hacker (`create_hacker`) with example badge code ABC123 (note that this does not adhere by the HTN badge_code naming system), I run `curl -X POST http://127.0.0.1:5000/hackers \ -H "Content-Type: application/json" \ -d '{"name": "John Doe", "email": "johndoe@example.com", "phone": "123-456-7890", "badge_code": "ABC123"}'`. The following commands work with the example hacker with badge code ABC123.
+- To create a new hacker (`create_hacker`) with example badge code ABC123 (note that this does not adhere to the HTN badge_code naming system), I run `curl -X POST http://127.0.0.1:5000/hackers \ -H "Content-Type: application/json" \ -d '{"name": "John Doe", "email": "johndoe@example.com", "phone": "123-456-7890", "badge_code": "ABC123"}'`. The following commands work with the example hacker with badge code ABC123.
 
 - To delete a hacker (`delete_hacker`), for example the one I just created, I run `curl -X DELETE http://127.0.0.1:5000/hackers/ABC123`
 
@@ -154,7 +154,7 @@ It is worth noting that although I have checked for several instances of invalid
 
 ## Last Updated
 
-Friday, February 7th, 2025
+Saturday, February 8th, 2025
 
 ---
 
