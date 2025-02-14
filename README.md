@@ -1,7 +1,5 @@
 # Hack the North Backend Challenge Submission
 
-This project acts as a submission to my application to be on Hack The North's 2025 Organizing team.
-
 ---
 
 ## API Description
